@@ -2,7 +2,7 @@
 #include <Adafruit_ST7735.h>
 #include <WiFi.h>  // Thư viện kết nối WiFi
 #include <FirebaseESP32.h>
-
+#include <.env>
 // Cấu hình chân kết nối
 #define TFT_CS    5   // Chip Select
 #define TFT_RST   17  // Reset
@@ -30,7 +30,7 @@ const uint16_t humidIcon[] PROGMEM = {
 const char* ssid = "Redmi";  // Thay bằng tên WiFi của bạn
 const char* password = "12345678";  // Thay bằng mật khẩu WiFi của bạn
 
-#define API_KEY "AIzaSyCzgFLyA7LiG0Oht8mvgPzaEeNmthAhGYw"
+#define API_KEY ".env/API_KEY"
 #define USER_EMAIL "dqcuong103@gmail.com"
 #define USER_PASSWORD "Q10032000"
 #define DATABASE_URL "https://iot-ble-system-default-rtdb.asia-southeast1.firebasedatabase.app" // Thay bằng URL của Fireba
