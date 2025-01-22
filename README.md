@@ -33,12 +33,12 @@ Mục tiêu của dự án là vận dụng kiến thức và kỹ năng đã h�
 
 ### Đặc Tả Kỹ Thuật
 - **Nút Cảm Biến:**
-  - Sử dụng vi điều khiển ARM (ví dụ: STM32).
-  - Được trang bị cảm biến để đo ít nhất một thông số môi trường.
+  - Sử dụng vi điều khiển ARM (STM32F411CEU6).
+  - Được trang bị cảm biến DHT21 để đo nhiệt độ, độ ẩm môi trường.
   - Giao tiếp với gateway qua BLE.
 
 - **Gateway:**
-  - Có thể thực hiện bằng smartphone, ESP32, v.v.
+  - Có thể thực hiện bằng ESP32
   - Chuyển tiếp dữ liệu từ nút cảm biến lên cloud.
   - Giao tiếp với nút cảm biến qua BLE và với cloud qua LTE/Wi-Fi.
 
