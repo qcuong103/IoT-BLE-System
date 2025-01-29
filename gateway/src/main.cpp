@@ -2,6 +2,8 @@
 #include <Adafruit_ST7735.h>
 #include <WiFi.h>  // Thư viện kết nối WiFi
 #include <FirebaseESP32.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 #include "config.h"
 // Cấu hình chân kết nối
 #define TFT_CS    5   // Chip Select
@@ -11,24 +13,12 @@
 // Khởi tạo màn hình
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
-// Bitmap icon (16x16 pixel)
-const uint16_t tempIcon[] PROGMEM = {
-    0x0000, 0x0000, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x07E0,
-    0x07E0, 0x07E0, 0x07E0, 0x07E0, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x07E0, 0xF800, 0xF800, 0xF800, 0x07E0, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x07E0, 0xF800, 0xF800, 0x07E0, 0x0000
-};
-
-const uint16_t humidIcon[] PROGMEM = {
-    0x0000, 0x0000, 0x07FF, 0x07FF, 0x07FF, 0x07FF, 0x07FF, 0x07FF,
-    0x07FF, 0x07FF, 0x07FF, 0x07FF, 0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x07FF, 0xF81F, 0xF81F, 0xF81F, 0x07FF, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x07FF, 0xF81F, 0xF81F, 0x07FF, 0x0000
-};
-
 // Cấu hình mạng WiFi
 const char* ssid = "Redmi";  // Thay bằng tên WiFi của bạn
 const char* password = "12345678";  // Thay bằng mật khẩu WiFi của bạn
+
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 3600000);  // Cấu hình NTP, lấy thời gian từ "pool.ntp.org"
 
 #define USER_EMAIL "dqcuong103@gmail.com"
 #define USER_PASSWORD "Q10032000"
@@ -118,31 +108,37 @@ void displayData(float humidity, float temperature) {
     tft.fillScreen(ST77XX_BLACK);  // Xóa màn hình
     
     // Hiển thị icon nhiệt độ
-    tft.drawRGBBitmap(10, 10, tempIcon, 16, 16);
-    tft.setCursor(30, 10);
+    tft.setCursor(10, 10);
     tft.setTextColor(ST77XX_RED);
     tft.setTextSize(2);
     tft.printf("%.2f C", temperature);
 
     // Hiển thị icon độ ẩm
-    tft.drawRGBBitmap(10, 40, humidIcon, 16, 16);
-    tft.setCursor(30, 40);
+    tft.setCursor(10, 40);
     tft.setTextColor(ST77XX_CYAN);
     tft.setTextSize(2);
     tft.printf("%.2f %%", humidity);
 }
 
 void loop() {
+    timeClient.update();
+    String currentTime = timeClient.getFormattedTime();
+
     // Tạo dữ liệu ngẫu nhiên
     float humidity = random(3000, 8000) / 100.0;    // Độ ẩm (30.00% đến 80.00%)
     float temperature = random(2000, 4000) / 100.0; // Nhiệt độ (20.00°C đến 40.00°C)
 
     // Gửi dữ liệu lên Firebase
-    if (Firebase.setFloat(firebaseData, "/sensorData/temperature", temperature)) {
-        Serial.println("Temperature data sent successfully.");
-    }
-    if (Firebase.setFloat(firebaseData, "/sensorData/humidity", humidity)) {
-        Serial.println("Humidity data sent successfully.");
+    FirebaseJson data;
+    data.set("humidity", humidity);
+    data.set("temperature", temperature);
+    data.set("time", currentTime); // Gửi thời gian thực
+
+    if (Firebase.setJSON(firebaseData, "/sensorData", data)) {
+        Serial.println("Data sent successfully.");
+    } else {
+        Serial.print("Failed to send data: ");
+        Serial.println(firebaseData.errorReason());
     }
 
     // Hiển thị dữ liệu
