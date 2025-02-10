@@ -95,9 +95,7 @@ void displayData(float humidity, float temperature) {
 
     tft.setCursor(28, 146);
     tft.setTextColor(0xFD00, ST7735_BLACK);
-    tft.printf("%.1f",calculateHeatIndex(temperature, humidity));  // Display heat index with one decimal place
-    // tft.setCursor(97, 146);         // Corrected cursor position for the degree symbol
-    // tft.print("C");
+    tft.printf("%.1f",calculateHeatIndex(temperature, humidity));  
 }
 
 void updateFirebase(float temperature, float humidity) {
@@ -118,39 +116,23 @@ void drawCenteredText(int y, const char* text, uint16_t color, uint16_t bgColor,
     tft.setTextSize(textSize);
     tft.setTextColor(color, bgColor);
     
-    // Tính kích thước chữ
     tft.getTextBounds(text, 0, y, &x1, &y1, &w, &h);
     
-    // Tính vị trí X để căn giữa
     int x = (tft.width() - w) / 2;
     
     tft.setCursor(x, y);
     tft.print(text);
 }
 
-// void notifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
-//     Serial.println("Notification received!");
-//     String receivedData = String((char*)pData).substring(0, length);
-//     String value = String((char*)pData); // Chuyển đổi dữ liệu nhận được thành chuỗi
-//     Serial.println("Received data: " + value);
-//     float temp, humid;
-//     if (sscanf(receivedData.c_str(), "%f %f", &temp, &humid) == 2) {
-//         Serial.printf("Received: Temp = %.2f, Humid = %.2f\n", temp, humid);
-//         displayData(temp, humid);
-//     }
-// }
-
 void setup() {
     Serial.begin(115200);
 
     // Khởi tạo màn hình
-    tft.initR(INITR_BLACKTAB);  // Sử dụng cấu hình ST7735 Black Tab
-    tft.setRotation(0);        // Xoay màn hình nếu cần
+    tft.initR(INITR_BLACKTAB);  
+    tft.setRotation(0);        
     tft.fillScreen(ST77XX_BLACK);
-    // WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, IPAddress(8, 8, 8, 8), IPAddress(8, 8, 4, 4));
 
     // Kết nối với WiFi
-    
     WiFi.begin(ssid, password);
     tft.setCursor(0, 60);
     tft.setTextColor(ST77XX_WHITE);
@@ -180,12 +162,6 @@ void setup() {
     firebaseConfig.database_url = DATABASE_URL;
     firebaseAuth.user.email = USER_EMAIL;
     firebaseAuth.user.password = USER_PASSWORD;
-
-    // Firebase.reconnectWiFi(true);
-    // firebaseData.setResponseSize(4096);
-
-    // // Assign the maximum retry of token generation
-    // firebaseConfig.max_token_generation_retry = 5;
 
     Firebase.begin(&firebaseConfig, &firebaseAuth);
 
@@ -223,24 +199,6 @@ void setup() {
         receivedStr.trim();
         receivedInt = receivedStr.toInt();
         Serial.println("Received Int: " + receivedStr);
-        // uint32_t receivedData = static_cast<uint32_t>(receivedInt);
-        // float temp = (receivedData / 10000) / 100.0;
-        // float humid = (receivedData % 10000) / 100.0;
-
-        // Serial.printf("Temp: %.2f°C, Humid: %.2f%%\n", temp, humid);
-
-        // updateFirebase(temp, humid);
-        // printf("updateFirebase");
-
-        // if (receivedData != lastData) {  // Chỉ gửi Firebase khi dữ liệu thay đổi
-        //     // displayData(temp, humid);
-        //     // printf("displayData");
-        //     if (lastData != receivedData) {
-        //         updateFirebase(temp, humid);
-        //         printf("updateFirebase");
-        //     }
-        //     lastData = receivedData;
-        // }
     });
 
     tft.fillScreen(ST77XX_BLACK);  // Xóa màn hình
@@ -267,31 +225,6 @@ void setup() {
 
 
 void loop() {
-    // timeClient.update();
-    // String currentTime = timeClient.getFormattedTime();
-
-    // Tạo dữ liệu ngẫu nhiên
-    // float humidity = random(3000, 8000) / 100.0;    // Độ ẩm (30.00% đến 80.00%)
-    // float temperature = random(2000, 4000) / 100.0; // Nhiệt độ (20.00°C đến 40.00°C)
-
-    // Gửi dữ liệu lên Firebase
-    // FirebaseJson data;
-    // data.set("humidity", humidity);
-    // data.set("temperature", temperature);
-    // data.set("time", currentTime); // Gửi thời gian thực
-
-    // if (Firebase.setJSON(firebaseData, "/sensorData", data)) {
-    //     Serial.println("Data sent successfully.");
-    // } else {
-    //     Serial.print("Failed to send data: ");
-    //     Serial.println(firebaseData.errorReason());
-    // }
-
-    // Hiển thị dữ liệu
-    // displayData(humidity, temperature);
-
-    // Cập nhật sau mỗi 2 giây
-    // delay(5000);
 
     if (receivedInt != lastReceivedInt) {
         uint32_t receivedData = static_cast<uint32_t>(receivedInt);
@@ -304,18 +237,5 @@ void loop() {
         lastReceivedInt = receivedInt;
     }
 
-    // if (connected && pRemote haracteristic->canRead()) {
-    //     std::string value = pRemoteCharacteristic->readValue();
-    //     Serial.println("Received: " + String(value.c_str()));
-    //     value.erase(value.find_last_not_of(" \t\n\r") + 1);  // Xóa khoảng trắng cuối chuỗi
-    //     int receivedInt = atoi(value.c_str());
-    //     uint32_t receivedData = static_cast<uint32_t>(receivedInt);
-    //     float temp = (receivedData / 10000) / 100.0;
-    //     float humid = (receivedData % 10000) / 100.0;
-    //     Serial.printf("Temp: %.2f°C, Humid: %.2f%%\n", temp, humid);
-    //     updateFirebase(temp, humid);
-    //     printf("updateFirebase");
-    // }
     delay(2000);
-    // yield();
 }

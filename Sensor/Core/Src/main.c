@@ -5,28 +5,7 @@
 #include "gpio.h"
 #include <stdio.h>
 #include <string.h>
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 #include "dht.h"
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-
 /* USER CODE BEGIN PV */
 DHT_t am2301;
 float temp, humid;
@@ -44,9 +23,6 @@ void sendBLE(uint32_t data) {
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
@@ -55,25 +31,14 @@ void sendBLE(uint32_t data) {
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
   /* Configure the system clock */
   SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
@@ -87,9 +52,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
 	  HAL_Delay(10000);
 	  DHT_readData(&am2301, &temp, &humid);
 	  // Mã hóa dữ liệu: 20.90°C -> 2090, 58.60% -> 5860 -> 20905860
@@ -101,7 +63,6 @@ int main(void)
 	  lastEncodedData=encodedData;
 	  HAL_Delay(10000);
   }
-  /* USER CODE END 3 */
 }
 
 /**

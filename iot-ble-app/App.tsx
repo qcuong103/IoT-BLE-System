@@ -14,11 +14,11 @@ const App = () => {
   const [selectedTab, setSelectedTab] = useState<'Temperature' | 'Humidity'>('Temperature');
   const [sensorData, setSensorData] = useState([
     ...Array(1).fill({
-      humidity: 50.0, // Đặt giá trị mặc định cho độ ẩm
-      temperature: 25.0, // Đặt giá trị mặc định cho nhiệt độ
-      time: new Date().toLocaleTimeString(), // Đặt thời gian hiện tại
+      humidity: 50.0, 
+      temperature: 25.0, 
+      time: new Date().toLocaleTimeString(), 
       })
-  ]); // Mảng lưu dữ liệu từ Firebase
+  ]); 
   const [temperature, setTemperature] = useState<number | null>(null);
   const [humidity, setHumidity] = useState<number | null>(null);
 
@@ -33,7 +33,6 @@ const App = () => {
 
   const handleRefresh = () => {
     console.log('Refresh button pressed');
-    // Thêm logic làm mới tại đây nếu cần
   };
   
   const animatedIndicatorStyle = useAnimatedStyle(() => ({
@@ -43,13 +42,13 @@ const App = () => {
   useEffect(() => {
       const sensorDataRef = ref(database, 'sensorData/');
   
-      // Lắng nghe sự thay đổi dữ liệu trong Firebase Realtime Database
+
       const unsubscribe = onValue(sensorDataRef, (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
           if (data) {
-            setTemperature(data.temperature); // Cập nhật nhiệt độ
-            setHumidity(data.humidity);       // Cập nhật độ ẩm
+            setTemperature(data.temperature); 
+            setHumidity(data.humidity);       
             if (data.temperature < minTemp) {
               setMinTemp(data.temperature);
             }
@@ -58,16 +57,16 @@ const App = () => {
             }
           }
           const newData = {
-            time: data.time ?? new Date().toLocaleTimeString(), // Gán thời gian nếu không có
+            time: data.time ?? new Date().toLocaleTimeString(), 
             temperature: data.temperature,
             humidity: data.humidity,
           };
           setSensorData((prevData) => {
-            const updatedData = [...prevData, newData]; // Thêm dữ liệu mới vào cuối mảng
+            const updatedData = [...prevData, newData];
             if (updatedData.length > 30) {
-              updatedData.shift(); // Xóa phần tử đầu tiên nếu mảng có hơn 20 phần tử
+              updatedData.shift();
             }
-            return updatedData; // Trả về mảng cập nhật
+            return updatedData;
               });
             } else {
               console.log("No data available");
@@ -75,25 +74,23 @@ const App = () => {
         }
       });
   
-      // Dọn dẹp khi component bị hủy (unmount)
       return () => unsubscribe();
-    }, []); // Mảng dependency rỗng, chỉ chạy một lần khi component được mount
+    }, []); 
 
     const chartData = {
       temperature: sensorData.map(item => item.temperature),
       humidity: sensorData.map(item => item.humidity),
     };
     // Dữ liệu của biểu đồ
-    const dataTemp = chartData.temperature.map(value => ({ value }));  // Dữ liệu nhiệt độ dưới dạng [{ value: 20 }, { value: 21 }, ...]
-    const dataHumi = chartData.humidity.map(value => ({ value }));  // Dữ liệu nhiệt độ dưới dạng [{ value: 20 }, { value: 21 }, ...]
+    const dataTemp = chartData.temperature.map(value => ({ value }));  
+    const dataHumi = chartData.humidity.map(value => ({ value }));  
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Nút refresh góc trên phải */}
       <Text style={styles.header}>Temperature and Humidity</Text>
       <ImageBackground
-      source={require('./assets/bg.png')} // Đường dẫn tới ảnh trong thư mục assets
-      style={styles.container1} // Đặt chiều cao bằng với container1
-      resizeMode="cover" // Phủ kín container mà không để khoảng trống
+      source={require('./assets/bg.png')} 
+      style={styles.container1} 
+      resizeMode="cover" 
       >
         <View style={styles.cardContainer}>
           <Card style={styles.card}>
@@ -152,22 +149,7 @@ const App = () => {
         spacing={20}
         initialSpacing={0}
         height={200}
-        // curveType={CurveType.CUBIC}
-        // curvature={0}
-        // animateOnDataChange
-        // animationDuration={500}
-        // onDataChangeAnimationDuration={300}
         yAxisOffset={selectedTab === 'Temperature' ? minTemp *0.9 : minHumi * 0.9}
-        // chartConfig={{
-        //   backgroundColor: '#ffffff',
-        //   backgroundGradientFrom: '#ffffff',
-        //   backgroundGradientTo: '#ffffff',
-        //   decimalPlaces: 1,
-        //   color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-        //   labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        //   style: { borderRadius: 16 },
-        // }}
-        
       />
 
     </ScrollView>
@@ -180,15 +162,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5F8FE',
   },
-  // headerContainer: {
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between', // Căn chỉnh tiêu đề và nút refresh
-  //   width: '90%', // Chiếm 90% chiều rộng màn hình
-  //   marginBottom: 10,
-  //   alignContent: 'center',
-  // },
   header: {
-    width: '100%', // Chiếm 90% chiều rộng màn hình
+    width: '100%', 
     marginBottom: 10,
     fontSize: 23,
     fontWeight: 'bold',
@@ -206,9 +181,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   cardContent: {
-    flexDirection: 'row', // Đặt các phần tử theo chiều ngang
-    alignItems: 'flex-end', // Căn giữa các phần tử theo chiều dọc
-    justifyContent: 'flex-start', // Căn trái các phần tử
+    flexDirection: 'row', 
+    alignItems: 'flex-end', 
+    justifyContent: 'flex-start', 
   },
   cardContainer: {
     flexDirection: 'column',
@@ -250,7 +225,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '90%',
     height: 50,
-    backgroundColor: '#e0e0e0', // Màu nền của container
+    backgroundColor: '#e0e0e0', 
     borderRadius: 25,
     overflow: 'hidden',
   },
@@ -258,10 +233,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'green',
   },
   activeTab: {
-    backgroundColor: 'transparent', // Giữ nền trong suốt cho active tab
+    backgroundColor: 'transparent',
   },
   tabText: {
     fontSize: 16,
@@ -311,12 +285,12 @@ const styles = StyleSheet.create({
     width: '43%',
     height: '90%',
     backgroundColor: '#fff',
-    borderRadius: 25, // Góc bo tròn
-    elevation: 2, // Hiệu ứng đổ bóng
-    top: '5%', // Canh giữa theo chiều dọc
-    left: '1%', // Căn chỉnh nhỏ hơn để cân đối trong tab
-    justifyContent: 'center', // Canh giữa nội dung theo chiều dọc
-    alignItems: 'center', // Canh giữa nội dung theo chiều ngang
+    borderRadius: 25,
+    elevation: 2, 
+    top: '5%',
+    left: '1%',
+    justifyContent: 'center',
+    alignItems: 'center', 
     textAlign: 'center',
   },
   refreshButton: {
