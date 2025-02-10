@@ -1,0 +1,17 @@
+11:23:32 **** Incremental Build of configuration Debug for project Sensor ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Sensor.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\IoT-BLE-System\Sensor\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Sensor.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Sensor.elf
+ 
+arm-none-eabi-size  Sensor.elf 
+arm-none-eabi-objdump -h -S Sensor.elf  > "Sensor.list"
+   text	   data	    bss	    dec	    hex	filename
+  26496	    472	   2176	  29144	   71d8	Sensor.elf
+Finished building: default.size.stdout
+ 
+Finished building: Sensor.list
+ 
+
+11:23:33 Build Finished. 0 errors, 0 warnings. (took 379ms)
+

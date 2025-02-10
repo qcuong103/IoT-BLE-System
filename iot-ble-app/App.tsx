@@ -89,13 +89,7 @@ const App = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Nút refresh góc trên phải */}
-      <View style={styles.headerContainer}>
       <Text style={styles.header}>Temperature and Humidity</Text>
-      {/* Nút refresh góc trên phải */}
-      <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
-        <FontAwesome name="refresh" size={30} color="black" />
-      </TouchableOpacity>
-    </View>
       <ImageBackground
       source={require('./assets/bg.png')} // Đường dẫn tới ảnh trong thư mục assets
       style={styles.container1} // Đặt chiều cao bằng với container1
@@ -163,7 +157,7 @@ const App = () => {
         // animateOnDataChange
         // animationDuration={500}
         // onDataChangeAnimationDuration={300}
-        yAxisOffset={selectedTab === 'Temperature' ? minTemp : minHumi}
+        yAxisOffset={selectedTab === 'Temperature' ? minTemp *0.9 : minHumi * 0.9}
         // chartConfig={{
         //   backgroundColor: '#ffffff',
         //   backgroundGradientFrom: '#ffffff',
@@ -186,18 +180,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5F8FE',
   },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between', // Căn chỉnh tiêu đề và nút refresh
-    width: '90%', // Chiếm 90% chiều rộng màn hình
-    marginTop: 50,
-    marginBottom: 10,
-    alignContent: 'center',
-  },
+  // headerContainer: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between', // Căn chỉnh tiêu đề và nút refresh
+  //   width: '90%', // Chiếm 90% chiều rộng màn hình
+  //   marginBottom: 10,
+  //   alignContent: 'center',
+  // },
   header: {
+    width: '100%', // Chiếm 90% chiều rộng màn hình
+    marginBottom: 10,
     fontSize: 23,
     fontWeight: 'bold',
     alignSelf: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
   container1: {
     flexDirection: 'row',
