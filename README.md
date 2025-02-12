@@ -1,105 +1,40 @@
-# IoT-BLE-System
-# Thiết Kế Hệ Thống IoT Sử Dụng BLE
+# IoT BLE System
 
-## Tổng Quan Dự Án
-Dự án này tập trung vào việc thiết kế và triển khai một hệ thống IoT để giám sát các thông số môi trường từ xa bằng công nghệ IoT. Hệ thống sử dụng vi điều khiển ARM để thu thập và truyền dữ liệu. BLE (Bluetooth Low Energy) được sử dụng để giao tiếp giữa các nút cảm biến và gateway, dữ liệu sau đó được gửi lên cloud để người dùng truy cập qua ứng dụng di động hoặc website.
+## Giới thiệu
+Hệ thống IoT giám sát nhiệt độ và độ ẩm sử dụng Bluetooth Low Energy (BLE) để truyền dữ liệu từ vi điều khiển STM32 đến ESP32. ESP32 hiển thị dữ liệu trên màn hình TFT và đồng bộ hóa với Firebase, từ đó cung cấp thông tin theo thời gian thực trên ứng dụng di động.
 
-## Mục Lục
+## Cấu trúc hệ thống
+- **Cảm biến DHT21**: Đo nhiệt độ và độ ẩm.
+- **STM32F411CEU6**: Xử lý dữ liệu cảm biến, gửi qua BLE.
+- **Module BLE HM-10**: Giao tiếp BLE giữa STM32 và ESP32.
+- **ESP32**: Nhận dữ liệu BLE, hiển thị trên màn hình TFT, gửi lên Firebase.
+- **Firebase**: Lưu trữ và đồng bộ hóa dữ liệu.
+- **Ứng dụng di động (React Native)**: Hiển thị dữ liệu và biểu đồ theo thời gian thực.
 
-1. [Giới Thiệu](#giới-thiệu)
-2. [Yêu Cầu Thiết Kế](#yêu-cầu-thiết-kế)
-   - [Đặc Tả Kỹ Thuật](#đặc-tả-kỹ-thuật)
-3. [Triển Khai Hệ Thống](#triển-khai-hệ-thống)
-   - [Kiến Trúc Phần Cứng](#kiến-trúc-phần-cứng)
-     - [Khối Xử Lý Trung Tâm](#khối-xử-lý-trung-tâm)
-     - [Cảm Biến Đầu Vào](#cảm-biến-đầu-vào)
-     - [LED](#led)
-     - [LCD](#lcd)
-   - [Lập Trình Hệ Thống Nhúng](#lập-trình-hệ-thống-nhúng)
-     - [Thiết Lập Clock Cho Hệ Thống](#thiết-lập-clock-cho-hệ-thống)
-     - [Khởi Tạo Cảm Biến](#khởi-tạo-cảm-biến)
-     - [Khởi Tạo Mô-đun BLE](#khởi-tạo-mô-đun-ble)
-     - [Khởi Tạo Systick Timer](#khởi-tạo-systick-timer)
-     - [Thiết Lập Mức Ưu Tiên Ngắt](#thiết-lập-mức-ưu-tiên-ngắt)
-     - [Chương Trình Chính](#chương-trình-chính)
-   - [Phát Triển Ứng Dụng/Website](#phát-triển-ứng-dụng-website)
-4. [Kiểm Chứng](#kiểm-chứng)
-5. [Kết Luận](#kết-luận)
+## Cài đặt và triển khai
+### 1. Cài đặt phần mềm
+- **STM32**: Lập trình bằng STM32CubeIDE.
+- **ESP32**: Sử dụng PlatformIO hoặc Arduino IDE.
+- **Ứng dụng di động**: React Native + Expo.
 
-## Giới Thiệu
-Mục tiêu của dự án là vận dụng kiến thức và kỹ năng đã học để thiết kế và triển khai một hệ thống IoT có khả năng giám sát các thông số môi trường từ xa, ví dụ như nhiệt độ, độ ẩm hoặc ánh sáng. Dự án yêu cầu sử dụng vi điều khiển ARM để thực hiện.
+### 2. Kết nối phần cứng
+1. Kết nối cảm biến DHT21 với STM32.
+2. Kết nối module HM-10 với STM32 qua UART.
+3. Kết nối ESP32 với màn hình TFT ST7735.
+4. Kết nối ESP32 với Firebase qua Wi-Fi.
 
-## Yêu Cầu Thiết Kế
+## Hướng dẫn sử dụng
+1. Nạp chương trình cho STM32 để gửi dữ liệu BLE.
+2. Nạp chương trình cho ESP32 để nhận dữ liệu và gửi lên Firebase.
+3. Cài đặt ứng dụng di động và theo dõi dữ liệu theo thời gian thực.
 
-### Đặc Tả Kỹ Thuật
-- **Nút Cảm Biến:**
-  - Sử dụng vi điều khiển ARM (STM32F411CEU6).
-  - Được trang bị cảm biến DHT21 để đo nhiệt độ, độ ẩm môi trường.
-  - Giao tiếp với gateway qua BLE.
+## Kiểm chứng và đánh giá
+- **Truyền dữ liệu BLE**: Đánh giá độ trễ và độ ổn định.
+- **Firebase**: Kiểm tra khả năng đồng bộ hóa dữ liệu theo thời gian thực.
+- **Ứng dụng di động**: Đánh giá khả năng hiển thị dữ liệu chính xác.
 
-- **Gateway:**
-  - Có thể thực hiện bằng ESP32
-  - Chuyển tiếp dữ liệu từ nút cảm biến lên cloud.
-  - Giao tiếp với nút cảm biến qua BLE và với cloud qua LTE/Wi-Fi.
+## Kết luận
+Dự án cung cấp giải pháp giám sát nhiệt độ và độ ẩm thông minh, tích hợp BLE và Firebase để theo dõi từ xa. Trong tương lai, có thể mở rộng với nhiều loại cảm biến và tối ưu hóa thuật toán truyền dữ liệu BLE.
 
-- **Cloud:**
-  - Lưu trữ dữ liệu cảm biến và cho phép người dùng truy cập từ xa.
-
-- **Ứng Dụng Di Động/Website:**
-  - Lấy dữ liệu từ cloud và hiển thị cho người dùng.
-
-## Triển Khai Hệ Thống
-
-### Kiến Trúc Phần Cứng
-
-#### Khối Xử Lý Trung Tâm
-Hệ thống sử dụng vi điều khiển ARM để triển khai thuật toán điều khiển.
-
-#### Cảm Biến Đầu Vào
-Cảm biến được sử dụng để đo các thông số môi trường. Ví dụ:
-- **DHT21:** Đo nhiệt độ và độ ẩm.
-
-#### LED
-LED được sử dụng để hiển thị trạng thái. Ví dụ:
-- LED đỏ: Pin PTE29
-- LED xanh lá: Pin PTD5
-
-#### LCD
-Hiển thị dữ liệu cảm biến theo thời gian thực.
-
-### Lập Trình Hệ Thống Nhúng
-
-#### Thiết Lập Clock Cho Hệ Thống
-Cấu hình clock hệ thống để đảm bảo hoạt động ổn định.
-
-#### Khởi Tạo Cảm Biến
-Các quy trình khởi tạo cảm biến môi trường.
-
-#### Khởi Tạo Mô-đun BLE
-- Kích hoạt clock.
-- Thiết lập ngắt.
-
-#### Khởi Tạo Systick Timer
-Cấu hình bộ đếm thời gian để kiểm tra hệ thống định kỳ.
-
-#### Thiết Lập Mức Ưu Tiên Ngắt
-Thiết lập mức ưu tiên cho các ngắt để đảm bảo hệ thống hoạt động trơn tru.
-
-#### Chương Trình Chính
-Thực hiện logic chính và luồng điều khiển.
-
-### Phát Triển Ứng Dụng/Website
-Phát triển giao diện người dùng để lấy và hiển thị dữ liệu từ cloud.
-
-## Kiểm Chứng
-Kiểm chứng bao gồm:
-- Trình diễn hệ thống hoạt động.
-- Cung cấp video minh họa thiết lập và kết quả.
-
-## Kết Luận
-Dự án đã triển khai thành công hệ thống IoT sử dụng vi điều khiển ARM và BLE. Hệ thống đáp ứng được việc giám sát từ xa và cung cấp dữ liệu cho người dùng thông qua ứng dụng di động hoặc website.
-
-## Tài Liệu Tham Khảo
-- Vui lòng bổ sung các tài liệu tham khảo tại đây.
-
----
+## Tác giả
+- **Dương Quốc Cường** - [GitHub](https://github.com/qcuong103/IoT-BLE-System)
