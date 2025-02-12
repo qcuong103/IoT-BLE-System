@@ -29,10 +29,8 @@ FirebaseConfig firebaseConfig;
 String uid;
 // Database main path (to be updated in setup with the user UID)
 String databasePath;
-
 // Parent Node (to be updated in every loop)
 String parentPath;
-
 FirebaseJson json;
 
 // BLE
